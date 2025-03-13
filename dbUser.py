@@ -1,50 +1,55 @@
-import conection as con
-import user
+from conection import Connection as con
+from user import user
 class dbUser:
     def __init__(self):
-        createDB = con.connection()
-        cursor = createDB.open()
-        cursor.execute("CREATE TABLE IF NOT EXISTS user (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50), username VARCHAR(20), password VARCHAR(20), profile VARCHAR(20))")
-        createDB.commit()
-        createDB.close()
-
-
-    def save(self, user):
-        conn = con.connection()
-        cursor = conn.open()
-        cursor.execute("INSERT INTO user (id, name, username, password, profile) VALUES (%s, %s, %s, %s, %s)", (user.getID(), user.getName(), user.getUsername(), user.getPassword(), user.getProfile()))
-        conn.commit()
-        conn.close()
+        self.connection = con()
+        self.cursor = self.connection.open()
+    def save(self, user: user) -> bool:
+        try:
+            self.cursor.execute("""
+                INSERT INTO usuarios (nombre, user_name, password, perfil)
+                VALUES (%s, %s, %s, %s)
+            """, (user.getNombre(), user.getUserName(), user.getPassword(), user.getPerfil()))
+            self.connection.commit()
+        except:
+            return False
+        return True
+   
+    def update(self, user: user) -> bool:
+        try:
+            self.cursor.execute("""
+                UPDATE usuarios
+                SET nombre = %s, user_name = %s, password = %s, perfil = %s
+                WHERE usuario_id = %s
+            """, (user.getNombre(), user.getUserName(), user.getPassword(), user.getPerfil(), user.getID()))
+            self.connection.commit()
+        except:
+            return False
         return True
     
-    def update(self, user):
-        conn = con.connection()
-        cursor = conn.open()
-        cursor.execute("UPDATE user SET name = %s, username = %s, password = %s, profile = %s WHERE id = %s", (user.getName(), user.getUsername(), user.getPassword(), user.getProfile(), user.getID()))
-        conn.commit()
-        conn.close()
+    def delete(self, user: user) -> bool:
+        try:
+            self.cursor.execute("""
+                DELETE FROM usuarios
+                WHERE usuario_id = %s
+            """, (user.getID(),))
+            self.connection.commit()
+        except:
+            return False
         return True
     
-    def delete(self, user):
-        conn = con.connection()
-        cursor = conn.open()
-        cursor.execute("DELETE FROM user WHERE id = %s", (user.getID(),))
-        conn.commit()
-        conn.close()
-        return True
-    
-    def get(self, id):
-        conn = con.connection()
-        cursor = conn.open()
-        cursor.execute("SELECT * FROM user WHERE id = %s", (id,))
-        row = cursor.fetchone()
-        conn.close()
-        if row is not None:
-            userObj = user.user()
-            userObj.setID(row[0])
-            userObj.setName(row[1])
-            userObj.setUsername(row[2])
-            userObj.setPassword(row[3])
-            userObj.setProfile(row[4])
-            return userObj
-        return False
+    def get(self, user: user) -> user:
+        try:
+            self.cursor.execute("""
+                SELECT * FROM usuarios
+                WHERE usuario_id = %s
+            """, (user.getID(),))
+            row = self.cursor.fetchone()
+            user.setID(row[0])
+            user.setNombre(row[1])
+            user.setUserName(row[2])
+            user.setPassword(row[3])
+            user.setPerfil(row[4])
+        except:
+            return None
+        return user

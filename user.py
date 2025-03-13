@@ -2,42 +2,42 @@
 class user:
     def __init__(self):
         self.id = None
-        self.name = None
-        self.username = None
+        self.nombre = None
+        self.user_name = None
         self.password = None
-        self.profile = None
+        self.perfil = None
+
+    def getID(self) -> int:
+        return self.id
     
-    def setID(self, id):
+    def setID(self, id: int) -> bool:
         self.id = id
         return True
+
+    def getNombre(self) -> str:
+        return self.nombre
     
-    def setName(self, name):
-        self.name = name
+    def setNombre(self, nombre: str) -> bool:
+        self.nombre = nombre
         return True
     
-    def setUsername(self, username):
-        self.username = username
+    def getUserName(self) -> str:
+        return self.user_name
+    
+    def setUserName(self, user_name: str) -> bool:
+        self.user_name = user_name
         return True
     
-    def setPassword(self, password):
+    def getPassword(self) -> str:
+        return self.password
+    
+    def setPassword(self, password: str) -> bool:
         self.password = password
         return True
     
-    def setProfile(self, profile):
-        self.profile = profile
+    def getPerfil(self) -> str:
+        return self.perfil
+    
+    def setPerfil(self, perfil: str) -> bool:
+        self.perfil = perfil
         return True
-    
-    def getID(self):
-        return self.id
-    
-    def getName(self):
-        return self.name
-    
-    def getUsername(self):
-        return self.username
-
-    def getPassword(self):
-        return self.password
-    
-    def getProfile(self):
-        return self.profile
