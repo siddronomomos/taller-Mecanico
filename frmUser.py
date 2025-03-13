@@ -4,39 +4,45 @@ from tkinter import ttk
 from dbUser import dbUser
 from user import user
 
-class UserApp:
+class frmUser:
     def __init__(self, root):
         self.root = root
         self.root.title("CRUD Usuarios")
         self.db = dbUser()
         
-        # Labels y Entradas
-        tk.Label(root, text="ID:").grid(row=0, column=0)
-        self.id_entry = tk.Entry(root)
-        self.id_entry.grid(row=0, column=1)
+        main_frame = tk.Frame(root, padx=10, pady=10)
+        main_frame.grid(row=0, column=0, sticky="nsew")
         
-        tk.Label(root, text="Nombre:").grid(row=1, column=0)
-        self.nombre_entry = tk.Entry(root)
-        self.nombre_entry.grid(row=1, column=1)
+        tk.Label(main_frame, text="ID:").grid(row=0, column=0, sticky="e", pady=5)
+        self.id_entry = tk.Entry(main_frame)
+        self.id_entry.grid(row=0, column=1, pady=5)
         
-        tk.Label(root, text="Usuario:").grid(row=2, column=0)
-        self.username_entry = tk.Entry(root)
-        self.username_entry.grid(row=2, column=1)
+        tk.Label(main_frame, text="Nombre:").grid(row=1, column=0, sticky="e", pady=5)
+        self.nombre_entry = tk.Entry(main_frame)
+        self.nombre_entry.grid(row=1, column=1, pady=5)
         
-        tk.Label(root, text="Contraseña:").grid(row=3, column=0)
-        self.password_entry = tk.Entry(root, show="*")
-        self.password_entry.grid(row=3, column=1)
+        tk.Label(main_frame, text="Usuario:").grid(row=2, column=0, sticky="e", pady=5)
+        self.username_entry = tk.Entry(main_frame)
+        self.username_entry.grid(row=2, column=1, pady=5)
         
-        tk.Label(root, text="Perfil:").grid(row=4, column=0)
-        self.perfil_combobox = ttk.Combobox(root, values=["Admin", "Auxiliar", "Mecánico", "Usuario"])
-        self.perfil_combobox.grid(row=4, column=1)
+        tk.Label(main_frame, text="Contraseña:").grid(row=3, column=0, sticky="e", pady=5)
+        self.password_entry = tk.Entry(main_frame, show="*")
+        self.password_entry.grid(row=3, column=1, pady=5)
+        
+        tk.Label(main_frame, text="Perfil:").grid(row=4, column=0, sticky="e", pady=5)
+        self.perfil_combobox = ttk.Combobox(main_frame, values=["Admin", "Auxiliar", "Mecánico", "Usuario"])
+        self.perfil_combobox.grid(row=4, column=1, pady=5)
+        
+        # Frame para los botones
+        button_frame = tk.Frame(main_frame, pady=10)
+        button_frame.grid(row=5, column=0, columnspan=2)
         
         # Botones CRUD
-        tk.Button(root, text="Guardar", command=self.save_user).grid(row=5, column=0)
-        tk.Button(root, text="Actualizar", command=self.update_user).grid(row=5, column=1)
-        tk.Button(root, text="Eliminar", command=self.delete_user).grid(row=6, column=0)
-        tk.Button(root, text="Buscar", command=self.get_user).grid(row=6, column=1)
-        tk.Button(root, text="Limpiar", command=self.clear_fields).grid(row=7, column=0, columnspan=2)
+        tk.Button(button_frame, text="Guardar", command=self.save_user).grid(row=0, column=0, padx=5)
+        tk.Button(button_frame, text="Actualizar", command=self.update_user).grid(row=0, column=1, padx=5)
+        tk.Button(button_frame, text="Eliminar", command=self.delete_user).grid(row=0, column=2, padx=5)
+        tk.Button(button_frame, text="Buscar", command=self.get_user).grid(row=0, column=3, padx=5)
+        tk.Button(button_frame, text="Limpiar", command=self.clear_fields).grid(row=0, column=4, padx=5)
         
     def save_user(self):
         u = user()
@@ -100,5 +106,5 @@ class UserApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = UserApp(root)
+    app = frmUser(root)
     root.mainloop()
