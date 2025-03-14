@@ -11,12 +11,16 @@ class Connection:
         self.cursor = None
     
     def open(self) -> mysql.connector.cursor.MySQLCursor:
-        self.con = mysql.connector.connect(
-            host=self.host,
-            user=self.user,
-            password=self.password
-        )
-        self.cursor = self.con.cursor()
+        try:
+            self.con = mysql.connector.connect(
+                host=self.host,
+                user=self.user,
+                password=self.password
+            )
+            self.cursor = self.con.cursor()
+        except:
+            exit("Error al conectar a la base de datos")
+            return None
         self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.database}")
         self.con.database = self.database
         

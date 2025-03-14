@@ -4,6 +4,9 @@ class dbUser:
     def __init__(self):
         self.connection = con()
         self.cursor = self.connection.open()
+        if self.cursor == None:
+            raise Exception("Error al conectar a la base de datos")
+        
     def save(self, user: user) -> bool:
         try:
             self.cursor.execute("""
