@@ -56,3 +56,20 @@ class dbUser:
         except:
             return None
         return user
+    
+    def login(self, user: user) -> str | bool: 
+        try:
+            self.cursor.execute("""
+                SELECT * FROM usuarios
+                WHERE user_name = %s AND password = %s
+            """, (user.getUserName(), user.getPassword()))
+            row = self.cursor.fetchone()
+            user.setID(row[0])
+            user.setNombre(row[1])
+            user.setUserName(row[2])
+            user.setPassword(row[3])
+            user.setPerfil(row[4])
+        except:
+            return False
+        return user.getPerfil()
+        

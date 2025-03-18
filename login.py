@@ -1,7 +1,9 @@
 from pathlib import Path
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, PhotoImage
+from tkinter import Tk, Canvas, Entry, PhotoImage, messagebox
 from typing import Callable, Any
+from dbUser import dbUser
+from user import user
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -18,6 +20,12 @@ window.geometry("1280x720")
 window.configure(bg = "#FFFFFF")
 window.title("Login Taller MeCanico")
 window.iconbitmap(relative_to_assets("icon.ico"))
+window.update_idletasks()
+width = window.winfo_width()
+height = window.winfo_height()
+x = (window.winfo_screenwidth() // 2) - (width // 2)
+y = (window.winfo_screenheight() // 2) - (height // 2)
+window.geometry(f'{width}x{height}+{x}+{y}')
 
 canvas = Canvas(
     window,
@@ -115,22 +123,6 @@ image_3 = canvas.create_image(
 )
 canvas.itemconfig(image_3, state=tk.HIDDEN)
 
-# button_image_1 = PhotoImage(
-#     file=relative_to_assets("button_1.png"))
-# button_1 = Button(
-#     image=button_image_1,
-#     borderwidth=0,
-#     highlightthickness=0,
-#     command=lambda: print("button_1 clicked"),
-#     relief="flat"
-# )
-# button_1.place(
-#     x=1062.0,
-#     y=395.0,
-#     width=34.0,
-#     height=34.0
-# )
-
 def show_hide_password():
     if entry_2.cget('show') == '':
         entry_2.config(show='*')
@@ -144,24 +136,18 @@ def show_hide_password():
 
 CanvasButton(canvas, 1062, 395, relative_to_assets("button_1.png"), lambda: show_hide_password())
 
+def login():
+    u = user()
+    db = dbUser()
+    u.setUserName(entry_1.get())
+    u.setPassword(entry_2.get())
+    result = db.login(u)
+    if result:
+        messagebox.showinfo("Éxito", "Usuario encontrado, perfil: " + result)
+    else:
+        messagebox.showerror("Error", "Usuario no encontrado")
 
-# button_image_2 = PhotoImage(
-#     file=relative_to_assets("button_2.png"))
-# button_2 = Button(
-#     image=button_image_2,
-#     borderwidth=0,
-#     highlightthickness=0,
-#     command=lambda: print("button_2 clicked"),
-#     relief="flat"
-# )
-# button_2.place(
-#     x=880.0,
-#     y=501.0,
-#     width=159.0,
-#     height=48.0
-# )
-
-CanvasButton(canvas, 880, 501, relative_to_assets("button_2.png"), lambda: print("button_2 clicked"))
+CanvasButton(canvas, 880, 501, relative_to_assets("button_2.png"), lambda: login())
 
 window.resizable(False, False)
 window.mainloop()
