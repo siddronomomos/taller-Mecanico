@@ -28,7 +28,7 @@ class Connection:
             CREATE TABLE IF NOT EXISTS usuarios (
                 usuario_id INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 nombre VARCHAR(30) NOT NULL,
-                user_name VARCHAR(30) NOT NULL,
+                user_name VARCHAR(30) NOT NULL UNIQUE,
                 password VARCHAR(30) NOT NULL,
                 perfil VARCHAR(20) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci

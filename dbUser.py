@@ -57,7 +57,7 @@ class dbUser:
             return None
         return user
     
-    def login(self, user: user) -> str | bool: 
+    def login(self, user: user) -> user | bool: 
         try:
             self.cursor.execute("""
                 SELECT * FROM usuarios
@@ -71,5 +71,5 @@ class dbUser:
             user.setPerfil(row[4])
         except:
             return False
-        return user.getPerfil()
+        return user
         

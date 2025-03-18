@@ -18,7 +18,7 @@ window = Tk()
 
 window.geometry("1280x720")
 window.configure(bg = "#FFFFFF")
-window.title("Login Taller MeCanico")
+window.title("Login Taller Mecanico")
 window.iconbitmap(relative_to_assets("icon.ico"))
 window.update_idletasks()
 width = window.winfo_width()
@@ -141,7 +141,7 @@ def login():
     db = dbUser()
     u.setUserName(entry_1.get())
     u.setPassword(entry_2.get())
-    result = db.login(u)
+    result = db.login(u).getPerfil() if db.login(u) else None
     if result:
         messagebox.showinfo("Éxito", "Usuario encontrado, perfil: " + result)
     else:

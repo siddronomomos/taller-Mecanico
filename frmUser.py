@@ -30,7 +30,7 @@ class frmUser:
         self.password_entry.grid(row=3, column=1, pady=5)
         
         tk.Label(main_frame, text="Perfil:").grid(row=4, column=0, sticky="e", pady=5)
-        self.perfil_combobox = ttk.Combobox(main_frame, values=["Admin", "Auxiliar", "Mecánico", "Usuario"])
+        self.perfil_combobox = ttk.Combobox(main_frame, values=["Admin", "Auxiliar", "Mecánico"])
         self.perfil_combobox.grid(row=4, column=1, pady=5)
         
         # Frame para los botones
