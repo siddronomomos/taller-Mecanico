@@ -33,11 +33,9 @@ class frmUser:
         self.perfil_combobox = ttk.Combobox(main_frame, values=["Admin", "Auxiliar", "Mecánico"])
         self.perfil_combobox.grid(row=4, column=1, pady=5)
         
-        # Frame para los botones
         button_frame = tk.Frame(main_frame, pady=10)
         button_frame.grid(row=5, column=0, columnspan=2)
         
-        # Botones CRUD
         tk.Button(button_frame, text="Guardar", command=self.save_user).grid(row=0, column=0, padx=5)
         tk.Button(button_frame, text="Actualizar", command=self.update_user).grid(row=0, column=1, padx=5)
         tk.Button(button_frame, text="Eliminar", command=self.delete_user).grid(row=0, column=2, padx=5)
