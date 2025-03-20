@@ -1,12 +1,20 @@
 from conection import Connection as con
 from user import user
 class dbUser:
-    def __init__(self):
+    def __init__(self) -> None:
         self.connection = con()
         self.cursor = self.connection.open()
         if self.cursor == None:
-            raise Exception("Error al conectar a la base de datos")
-        
+            raise ConnectionError("Error al conectar con la base de datos")
+
+    def test_connection(self) -> bool:
+        try:
+            self.cursor.execute("SELECT 1")
+        except Exception as e:
+            print(f"Prueba de conexión fallida: {e}")
+            return False
+        return True
+
     def save(self, user: user) -> bool:
         try:
             self.cursor.execute("""

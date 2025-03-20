@@ -1,71 +1,49 @@
 from pathlib import Path
-from tkinter import Tk, Canvas, Entry, PhotoImage, messagebox
+from tkinter import Canvas, Entry, PhotoImage, messagebox
 from dbUser import dbUser
 from user import user
 from CanvasButton import CanvasButton
 from mainWindow import mainWindow
 
-
-class LoginWindow:
-    def __init__(self, root: Tk | None=None):
-        if root is None:
-            raise ValueError("Main window not found")
-        self.window = root
-        # self.window.geometry("1280x720")
-        # self.window.configure(bg="#FFFFFF")
-        # self.window.title("Login Taller Mecanico")
+class LoginWindow(Canvas):
+    def __init__(self, parent: Canvas, controller: mainWindow) -> None:
+        super().__init__(parent, bg="#FFFFFF", height=720, width=1280, bd=0, highlightthickness=0, relief="flat")
+        self.controller = controller
         self.ASSETS_PATH = Path(__file__).parent / "assets" / "login"
-        # self.window.iconbitmap(self.relative_to_assets("icon.ico"))
-        # self.center_window()
 
-        self.canvas = Canvas(
-            self.window, bg="#FFFFFF", height=720, width=1280, bd=0, highlightthickness=0, relief="flat"
-        )
-        self.canvas.place(x=0, y=0)
         self.create_widgets()
-
-        # self.window.resizable(False, False)
-        self.window.mainloop()
 
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
 
-    # def center_window(self):
-    #     self.window.update_idletasks()
-    #     width = self.window.winfo_width()
-    #     height = self.window.winfo_height()
-    #     x = (self.window.winfo_screenwidth() // 2) - (width // 2)
-    #     y = (self.window.winfo_screenheight() // 2) - (height // 2)
-    #     self.window.geometry(f'{width}x{height}+{x}+{y}')
-
     def create_widgets(self):
         self.image_background = PhotoImage(file=self.relative_to_assets("background.png"))
-        self.canvas.create_image(638.0, 360.0, image=self.image_background)
+        self.create_image(638.0, 360.0, image=self.image_background)
 
-        self.entry_image = PhotoImage(file=self.relative_to_assets("entry_1.png"))
-        self.canvas.create_image(960.0, 319.5, image=self.entry_image)
+        self.entry_image = PhotoImage(file=self.relative_to_assets("entry_background.png"))
+        self.create_image(960.0, 319.5, image=self.entry_image)
         
-        self.entry_username = Entry(bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0)
+        self.entry_username = Entry(self, bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0)
         self.entry_username.place(x=841.5, y=295.0, width=237.0, height=51.0)
 
-        self.entry_password = Entry(bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0, show='*')
+        self.entry_password = Entry(self, bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0, show='*')
         self.entry_password.place(x=841.5, y=385.0, width=184.0, height=51.0)
         
         self.image_eye_closed = PhotoImage(file=self.relative_to_assets("eye_closed.png"))
         self.image_eye_open = PhotoImage(file=self.relative_to_assets("eye_open.png"))
 
-        self.eye_button = self.canvas.create_image(1079.0, 412.0, image=self.image_eye_closed)
-        self.canvas.tag_bind(self.eye_button, "<ButtonPress-1>", lambda e: self.show_hide_password())
+        self.eye_button = self.create_image(1079.0, 412.0, image=self.image_eye_closed)
+        self.tag_bind(self.eye_button, "<ButtonPress-1>", lambda e: self.show_hide_password())
 
-        CanvasButton(self.canvas, 880, 501, self.relative_to_assets("login_button.png"), self.login)
+        CanvasButton(self, 880, 501, self.relative_to_assets("login_button.png"), self.login)
 
     def show_hide_password(self):
         if self.entry_password.cget('show') == '':
             self.entry_password.config(show='*')
-            self.canvas.itemconfig(self.eye_button, image=self.image_eye_closed)
+            self.itemconfig(self.eye_button, image=self.image_eye_closed)
         else:
             self.entry_password.config(show='')
-            self.canvas.itemconfig(self.eye_button, image=self.image_eye_open)
+            self.itemconfig(self.eye_button, image=self.image_eye_open)
 
     def login(self) -> None:
         u = user()
@@ -84,8 +62,6 @@ class LoginWindow:
             messagebox.showerror("Error", "Usuario y/o contraseña incorrectos")
             return
 
-    def on_close(self):
-        self.canvas.destroy()
-
-if __name__ == "__main__":
-    LoginWindow(mainWindow().window)
+        # Switch to another screen upon successful login
+        # from HomeWindow import HomeWindow  # Import your home screen here
+        # self.controller.switch_canvas(HomeWindow)
