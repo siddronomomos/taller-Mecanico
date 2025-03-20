@@ -23,11 +23,13 @@ class LoginWindow(Canvas):
         self.entry_image = PhotoImage(file=self.relative_to_assets("entry_background.png"))
         self.create_image(960.0, 319.5, image=self.entry_image)
         
-        self.entry_username = Entry(self, bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0)
+        self.entry_username = Entry(self, bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0, validate="key")
         self.entry_username.place(x=841.5, y=295.0, width=237.0, height=51.0)
+        self.entry_username.configure(validatecommand=(self.register(self.limit_input), '%P'))
 
         self.entry_password = Entry(self, bd=0, bg="#444444", fg="#FFFFFF", highlightthickness=0, show='*')
         self.entry_password.place(x=841.5, y=385.0, width=184.0, height=51.0)
+        self.entry_password.configure(validatecommand=(self.register(self.limit_input), '%P'))
         
         self.image_eye_closed = PhotoImage(file=self.relative_to_assets("eye_closed.png"))
         self.image_eye_open = PhotoImage(file=self.relative_to_assets("eye_open.png"))
@@ -36,6 +38,9 @@ class LoginWindow(Canvas):
         self.tag_bind(self.eye_button, "<ButtonPress-1>", lambda e: self.show_hide_password())
 
         CanvasButton(self, 880, 501, self.relative_to_assets("login_button.png"), self.login)
+
+    def limit_input(self, new_value: str) -> bool:
+        return len(new_value) <= 30
 
     def show_hide_password(self):
         if self.entry_password.cget('show') == '':
