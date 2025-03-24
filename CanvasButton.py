@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 class CanvasButton:
-    def __init__(self, canvas: Canvas, x: int, y: int, image_path: Path, hover_image_path: Optional[Path], command: Callable[[], Any], state=NORMAL):
+    def __init__(self, canvas: Canvas, x: int, y: int, command: Callable[[], Any], image_path: Path, hover_image_path: Optional[Path] = None, state=NORMAL):
         self.canvas = canvas
         self.btn_image = PhotoImage(file=image_path)
         self.hover_image = PhotoImage(file=hover_image_path) if hover_image_path else None

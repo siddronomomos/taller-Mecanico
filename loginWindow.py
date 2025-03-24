@@ -37,7 +37,7 @@ class LoginWindow(Canvas):
         self.eye_button = self.create_image(1079.0, 412.0, image=self.image_eye_closed)
         self.tag_bind(self.eye_button, "<ButtonPress-1>", lambda e: self.show_hide_password())
 
-        CanvasButton(self, 880, 501, self.relative_to_assets("login_button.png"), None, self.login)
+        CanvasButton(self, 880, 501, self.login, self.relative_to_assets("login_button.png"), self.relative_to_assets("login_button_hover.png"))
 
     def limit_input(self, new_value: str) -> bool:
         return len(new_value) <= 30
