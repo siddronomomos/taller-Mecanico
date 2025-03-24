@@ -11,6 +11,14 @@ if __name__ == "__main__":
             raise ConnectionError("Error al conectar con la base de datos.")
         del db
 
+
+    except Exception as e:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror("Error crítico", f"No se pudo conectar con la base de datos.\nDetalles: {e}")
+        root.destroy()
+
+    try:
         app = mainWindow()
         app.switch_canvas(LoginWindow)
         app.window.mainloop()
@@ -18,5 +26,5 @@ if __name__ == "__main__":
     except Exception as e:
         root = tk.Tk()
         root.withdraw()
-        messagebox.showerror("Error crítico", f"No se pudo conectar con la base de datos.\nDetalles: {e}")
+        messagebox.showerror("Error crítico", f"Ocurrió un error inesperado.\nDetalles: {e}")
         root.destroy()
