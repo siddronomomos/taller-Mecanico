@@ -1,8 +1,7 @@
 from mainWindow import mainWindow
-from loginWindow import LoginWindow
+from loginCanvas import LoginCanvas
 from dbUser import dbUser
-import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, Tk
 
 if __name__ == "__main__":
     try:
@@ -13,18 +12,18 @@ if __name__ == "__main__":
 
 
     except Exception as e:
-        root = tk.Tk()
+        root = Tk()
         root.withdraw()
         messagebox.showerror("Error crítico", f"No se pudo conectar con la base de datos.\nDetalles: {e}")
         root.destroy()
 
     try:
         app = mainWindow()
-        app.switch_canvas(LoginWindow)
+        app.switch_canvas(LoginCanvas)
         app.window.mainloop()
 
     except Exception as e:
-        root = tk.Tk()
+        root = Tk()
         root.withdraw()
         messagebox.showerror("Error crítico", f"Ocurrió un error inesperado.\nDetalles: {e}")
         root.destroy()

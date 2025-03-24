@@ -5,7 +5,7 @@ from user import user
 from CanvasButton import CanvasButton
 from mainWindow import mainWindow
 
-class LoginWindow(Canvas):
+class LoginCanvas(Canvas):
     def __init__(self, parent: Canvas, controller: mainWindow) -> None:
         super().__init__(parent, bg="#FFFFFF", height=720, width=1280, bd=0, highlightthickness=0, relief="flat")
         self.controller = controller
