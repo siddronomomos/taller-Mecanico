@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 from dbUser import dbUser
-from user import user
+from user import User
 
 class frmUser:
     def __init__(self, root):
@@ -43,7 +43,7 @@ class frmUser:
         tk.Button(button_frame, text="Limpiar", command=self.clear_fields).grid(row=0, column=4, padx=5)
         
     def save_user(self):
-        u = user()
+        u = User()
         u.setNombre(self.nombre_entry.get())
         u.setUserName(self.username_entry.get())
         u.setPassword(self.password_entry.get())
@@ -55,7 +55,7 @@ class frmUser:
             messagebox.showerror("Error", "No se pudo guardar el usuario")
         
     def update_user(self):
-        u = user()
+        u = User()
         u.setID(int(self.id_entry.get()))
         u.setNombre(self.nombre_entry.get())
         u.setUserName(self.username_entry.get())
@@ -68,7 +68,7 @@ class frmUser:
             messagebox.showerror("Error", "No se pudo actualizar el usuario")
         
     def delete_user(self):
-        u = user()
+        u = User()
         u.setID(int(self.id_entry.get()))
         
         if self.db.delete(u):
@@ -77,7 +77,7 @@ class frmUser:
             messagebox.showerror("Error", "No se pudo eliminar el usuario")
         
     def get_user(self):
-        u = user()
+        u = User()
         u.setID(int(self.id_entry.get()))
         result = self.db.get(u)
         

@@ -1,5 +1,5 @@
 from conection import Connection as con
-from user import user
+from user import User
 class dbUser:
     def __init__(self) -> None:
         self.connection = con()
@@ -15,7 +15,7 @@ class dbUser:
             return False
         return True
 
-    def save(self, user: user) -> bool:
+    def save(self, user: User) -> bool:
         try:
             self.cursor.execute("""
                 INSERT INTO usuarios (nombre, user_name, password, perfil)
@@ -26,7 +26,7 @@ class dbUser:
             return False
         return True
    
-    def update(self, user: user) -> bool:
+    def update(self, user: User) -> bool:
         try:
             self.cursor.execute("""
                 UPDATE usuarios
@@ -38,7 +38,7 @@ class dbUser:
             return False
         return True
     
-    def delete(self, user: user) -> bool:
+    def delete(self, user: User) -> bool:
         try:
             self.cursor.execute("""
                 DELETE FROM usuarios
@@ -49,7 +49,7 @@ class dbUser:
             return False
         return True
     
-    def get(self, user: user) -> user:
+    def get(self, user: User) -> User:
         try:
             self.cursor.execute("""
                 SELECT * FROM usuarios
@@ -65,7 +65,7 @@ class dbUser:
             return None
         return user
     
-    def login(self, user: user) -> user | bool: 
+    def login(self, user: User) -> User | bool: 
         try:
             self.cursor.execute("""
                 SELECT * FROM usuarios

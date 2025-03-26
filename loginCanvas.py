@@ -1,7 +1,7 @@
 from pathlib import Path
 from tkinter import Canvas, Entry, PhotoImage, messagebox
 from dbUser import dbUser
-from user import user
+from user import User
 from CanvasButton import CanvasButton
 from mainWindow import mainWindow
 
@@ -51,7 +51,7 @@ class LoginCanvas(Canvas):
             self.itemconfig(self.eye_button, image=self.image_eye_open)
 
     def login(self) -> None:
-        u = user()
+        u = User()
         db = dbUser()
         username = self.entry_username.get().strip()
         password = self.entry_password.get().strip()

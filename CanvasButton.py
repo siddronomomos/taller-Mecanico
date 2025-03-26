@@ -1,10 +1,11 @@
-from tkinter import Canvas, PhotoImage, NORMAL
+from tkinter import Canvas, Event, PhotoImage, NORMAL, HIDDEN
 from typing import Callable, Any, Optional
 from pathlib import Path
 
 
 class CanvasButton:
-    def __init__(self, canvas: Canvas, x: int, y: int, command: Callable[[], Any], image_path: Path, hover_image_path: Optional[Path] = None, state=NORMAL):
+    def __init__(self, canvas: Canvas, x: int, y: int, command: Callable[[], Any], image_path: Path,
+                 hover_image_path: Optional[Path] = None, state=NORMAL, hide_on_click_outside=False):
         self.canvas = canvas
         self.btn_image = PhotoImage(file=image_path)
         self.hover_image = PhotoImage(file=hover_image_path) if hover_image_path else None
@@ -12,6 +13,9 @@ class CanvasButton:
         self.command = command
         self.x = x
         self.y = y
+        self.hide_on_click_outside = hide_on_click_outside
+        self.width = self.btn_image.width()
+        self.height = self.btn_image.height()
 
         canvas.tag_bind(self.canvas_btn_img_obj, "<ButtonPress-1>", self.on_press)
         canvas.tag_bind(self.canvas_btn_img_obj, "<ButtonRelease-1>", self.on_release)
@@ -19,16 +23,29 @@ class CanvasButton:
             canvas.tag_bind(self.canvas_btn_img_obj, "<Enter>", self.on_hover)
             canvas.tag_bind(self.canvas_btn_img_obj, "<Leave>", self.on_leave)
 
-    def on_press(self, event):
+        if hide_on_click_outside:
+            canvas.bind("<Button-1>", self.check_outside_click, add=True)
+
+    def on_press(self, event: Event):
         self.canvas.move(self.canvas_btn_img_obj, 1, 1)
 
-    def on_release(self, event):
+    def on_release(self, event: Event):
         self.canvas.move(self.canvas_btn_img_obj, -1, -1)
         self.command()
 
-    def on_hover(self, event):
+    def on_hover(self, event: Event):
         if self.hover_image:
             self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.hover_image)
 
-    def on_leave(self, event):
+    def on_leave(self, event: Event):
         self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.btn_image)
+
+    def check_outside_click(self, event: Event):
+        if not (self.x <= event.x <= self.x + self.width and self.y <= event.y <= self.y + self.height):
+            self.hide()
+
+    def hide(self):
+        self.canvas.itemconfig(self.canvas_btn_img_obj, state=HIDDEN)
+
+    def show(self):
+        self.canvas.itemconfig(self.canvas_btn_img_obj, state=NORMAL)
