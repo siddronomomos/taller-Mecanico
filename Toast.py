@@ -12,7 +12,7 @@ class Toast:
         self.type = type
         self.corner_radius = corner_radius
         self.alpha = 1.0
-        self.images = []  # Prevent garbage collection
+        self.images:list[ImageTk.PhotoImage] = []
         self.colors = {
             "info": "#2196F3",
             "success": "#4CAF50",
@@ -21,9 +21,9 @@ class Toast:
         }
 
         self.bg_color = self.colors.get(self.type, "#2196F3")
-        self.padding = 20  # Padding around the text
-        self.font_size = 16  # Default font size
-        self.font = ImageFont.load_default()  # Default font
+        self.padding = 20
+        self.font_size = 16
+        self.font = ImageFont.load_default()
         self.create_toast()
         self.show_toast()
 
@@ -34,11 +34,11 @@ class Toast:
         fill_color = tuple(int(color[i:i+2], 16) for i in (1, 3, 5)) + (alpha,)
         draw.rounded_rectangle((0, 0, width, height), radius, fill=fill_color)
         img_tk = ImageTk.PhotoImage(img)
-        self.images.append(img_tk)  # Store reference
+        self.images.append(img_tk)
         return img_tk
 
     def create_text_image(self, text, font_size=16, color="white", alpha=1.0):
-        font = ImageFont.truetype("arial.ttf", font_size)  # Use a truetype font for better scaling
+        font = ImageFont.truetype("arial.ttf", font_size)
         dummy_img = Image.new("RGBA", (1, 1))
         draw = ImageDraw.Draw(dummy_img)
         bbox = draw.textbbox((0, 0), text, font=font)
@@ -50,14 +50,13 @@ class Toast:
         draw.text((5, 5), text, fill=font_color, font=font)
 
         img_tk = ImageTk.PhotoImage(img)
-        self.images.append(img_tk)  # Store reference
+        self.images.append(img_tk)
         return img_tk, text_width, text_height
 
     def create_toast(self) -> None:
-        # Calcular dinámicamente el tamaño del toast basado en el texto
         self.text_img, text_width, text_height = self.create_text_image(self.message, font_size=self.font_size, color="#FFFFFF")
-        self.width = text_width + self.padding * 2  # Ajustar el ancho basado en el texto y el padding
-        self.height = max(text_height + self.padding * 2, 50)  # Altura mínima para evitar que sea demasiado pequeño
+        self.width = text_width + self.padding * 2
+        self.height = max(text_height + self.padding * 2, 50)
 
         canvas_width = self.parent.winfo_width()
         canvas_height = self.parent.winfo_height()
@@ -65,20 +64,18 @@ class Toast:
         self.x = (canvas_width - self.width) // 2
         self.y = canvas_height - int(self.height * 2.5)
 
-        # Crear el rectángulo de fondo
         self.bg_img = self.create_rounded_rectangle(self.width, self.height, self.corner_radius, self.bg_color)
         self.bg = self.parent.create_image(self.x, self.y, image=self.bg_img, anchor=NW)
 
-        # Posicionar el texto completamente centrado dentro del rectángulo
         self.text = self.parent.create_image(
-            self.x + (self.width // 2),  # Centrado horizontalmente
-            self.y + (self.height // 2),  # Centrado verticalmente
+            self.x + (self.width // 2),
+            self.y + (self.height // 2),
             image=self.text_img,
-            anchor="center"  # Anclado al centro
+            anchor="center",
+            state="normal",
         )
         self.parent.tag_raise(self.text)
 
-        # Vincular clics fuera del toast para cerrarlo
         self.parent.bind("<Button-1>", self.check_outside_click, add=True)
         self.parent.after(self.duration, self.fade_out)
 
@@ -90,7 +87,11 @@ class Toast:
         if alpha <= 0:
             self.parent.delete(self.bg)
             self.parent.delete(self.text)
-            del self
+            for img in self.images:
+                del img
+            del self.images[:]
+        
+
             return
 
         self.bg_img = self.create_rounded_rectangle(self.width, self.height, self.corner_radius, self.bg_color, alpha)
@@ -104,4 +105,4 @@ class Toast:
     def show_toast(self) -> None:
         self.parent.itemconfig(self.bg, state="normal")
         self.parent.itemconfig(self.text, state="normal")
-        self.parent.tag_raise(self.text)  # Asegurar que el texto esté encima
+        self.parent.tag_raise(self.text)
