@@ -1,9 +1,10 @@
 from pathlib import Path
-from tkinter import Canvas, Entry, PhotoImage, messagebox
+from tkinter import Canvas, Entry, PhotoImage
 from dbUser import dbUser
 from user import User
 from CanvasButton import CanvasButton
 from mainWindow import mainWindow
+from Toast import Toast
 
 class LoginCanvas(Canvas):
     def __init__(self, parent: Canvas, controller: mainWindow) -> None:
@@ -37,7 +38,7 @@ class LoginCanvas(Canvas):
         self.eye_button = self.create_image(1079.0, 412.0, image=self.image_eye_closed)
         self.tag_bind(self.eye_button, "<ButtonPress-1>", lambda e: self.show_hide_password())
 
-        CanvasButton(self, 880, 501, self.login, self.relative_to_assets("login_button.png"), self.relative_to_assets("login_button_hover.png"))
+        self.login_button = CanvasButton(self, 880, 501, self.login, self.relative_to_assets("login_button.png"), self.relative_to_assets("login_button_hover.png"))
 
     def limit_input(self, new_value: str) -> bool:
         return len(new_value) <= 30
@@ -57,16 +58,14 @@ class LoginCanvas(Canvas):
         password = self.entry_password.get().strip()
 
         if not username or not password:
-            messagebox.showerror("Error", "Usuario y contraseña son requeridos")
+            _ = Toast(self, "Por favor, complete todos los campos", 2000, "warning", corner_radius=20)
+            del _
             return
 
         u.setUserName(username)
         u.setPassword(password)
 
         if not db.login(u):
-            messagebox.showerror("Error", "Usuario y/o contraseña incorrectos")
+            _ = Toast(self, "Usuario o contraseña incorrectos", 2000, "error", corner_radius=20)
+            del _
             return
-
-        # Switch to another screen upon successful login
-        # from HomeWindow import HomeWindow  # Import your home screen here
-        # self.controller.switch_canvas(HomeWindow)

@@ -16,7 +16,7 @@ class mainWindow:
         self.canvas = Canvas(self.window, bg="#FFFFFF", height=720, width=1280, bd=0, highlightthickness=0, relief="flat")
         self.canvas.pack(fill="both", expand=True)
 
-    def center_window(self):
+    def center_window(self) -> None:
         self.window.update_idletasks()
         width = self.window.winfo_width()
         height = self.window.winfo_height()
