@@ -27,8 +27,8 @@ class mainWindow:
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
 
-    def switch_canvas(self, new_canvas_class: Type[Canvas]) -> None:
+    def switch_canvas(self, new_canvas_class: Type[Canvas], *args, **kwargs) -> None:
         self.canvas.destroy()
-        self.canvas = new_canvas_class(self.window, self)
+        self.canvas = new_canvas_class(self.window, self, *args, **kwargs)
         self.canvas.pack(fill="both", expand=True)
 

@@ -5,13 +5,13 @@ from user import User
 from CanvasButton import CanvasButton
 from mainWindow import mainWindow
 from Toast import Toast
+from backgroundCanvas import BackgroundCanvas
 
 class LoginCanvas(Canvas):
     def __init__(self, parent: Canvas, controller: mainWindow) -> None:
         super().__init__(parent, bg="#FFFFFF", height=720, width=1280, bd=0, highlightthickness=0, relief="flat")
         self.controller = controller
         self.ASSETS_PATH = Path(__file__).parent / "assets" / "login"
-
         self.create_widgets()
 
     def relative_to_assets(self, path: str) -> Path:
@@ -64,8 +64,12 @@ class LoginCanvas(Canvas):
 
         u.setUserName(username)
         u.setPassword(password)
+        u = db.login(u)
 
-        if not db.login(u):
+        if not u:
             _ = Toast(self, "Usuario o contraseña incorrectos", 2000, "error", corner_radius=20)
             del _
             return
+        
+        
+        self.controller.switch_canvas(BackgroundCanvas, u)
