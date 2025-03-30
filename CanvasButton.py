@@ -6,7 +6,8 @@ from PIL import Image, ImageTk
 
 class CanvasButton:
     def __init__(self, canvas: Canvas, x: int, y: int, command: Callable[[], Any], image_path: Path,
-                 hover_image_path: Optional[Path] = None, state=NORMAL, hide_on_click_outside=False):
+                 hover_image_path: Optional[Path] = None, state=NORMAL, hide_on_click_outside=False,
+                 toggle_on_click=False):
         self.canvas = canvas
         self.original_image = Image.open(image_path)
         self.btn_image = ImageTk.PhotoImage(self.original_image)
@@ -16,8 +17,10 @@ class CanvasButton:
         self.x = x
         self.y = y
         self.hide_on_click_outside = hide_on_click_outside
+        self.toggle_on_click = toggle_on_click
         self.width = self.btn_image.width()
         self.height = self.btn_image.height()
+        self.selected = False
 
         canvas.tag_bind(self.canvas_btn_img_obj, "<ButtonPress-1>", self.on_press)
         canvas.tag_bind(self.canvas_btn_img_obj, "<ButtonRelease-1>", self.on_release)
@@ -34,13 +37,16 @@ class CanvasButton:
     def on_release(self, event: Event):
         self.canvas.move(self.canvas_btn_img_obj, -1, -1)
         self.command()
+        if self.toggle_on_click:
+            self.toggle_selected()
 
     def on_hover(self, event: Event):
-        if self.hover_image:
+        if self.hover_image and not self.selected:
             self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.hover_image)
 
     def on_leave(self, event: Event):
-        self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.btn_image)
+        if not self.selected:
+            self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.btn_image)
 
     def check_outside_click(self, event: Event):
         if not (self.x <= event.x <= self.x + self.width and self.y <= event.y <= self.y + self.height):
@@ -55,7 +61,6 @@ class CanvasButton:
         if faded_image.mode != "RGBA":
             faded_image = faded_image.convert("RGBA")
 
-        # Extract the alpha channel and apply the fade effect
         r, g, b, a = faded_image.split()
         a = a.point(lambda p: p * (alpha / 255))
         faded_image = Image.merge("RGBA", (r, g, b, a))
@@ -70,3 +75,15 @@ class CanvasButton:
 
     def show(self):
         self.canvas.itemconfig(self.canvas_btn_img_obj, state=NORMAL)
+
+    def toggle_selected(self):
+        if self.selected:
+            self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.btn_image)
+        else:
+            self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.hover_image)
+        self.selected = not self.selected
+
+    def reset(self):
+        self.selected = False
+        self.canvas.itemconfig(self.canvas_btn_img_obj, image=self.btn_image)
+        self.show()
